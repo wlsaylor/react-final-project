@@ -13,7 +13,7 @@ const NavBar = () => {
 						<Link className="nav-link" to="/list">Movie List</Link>
 					</Nav>
 					<Nav>
-						<Button variant="light">Sign In</Button>
+						<Button variant="secondary">Sign In</Button>
 					</Nav>
 				</Navbar.Collapse>
 		</Navbar>

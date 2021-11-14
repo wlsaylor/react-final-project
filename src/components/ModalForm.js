@@ -69,9 +69,7 @@ const ModalForm = ({show, editStatus, movieToEdit, handleClose, onUpdate, onAdd}
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                Close
-                </Button>
+                <Button variant="secondary" onClick={handleClose}>Cancel</Button>
                 {editStatus 
                     ? <Button variant="warning" type="submit" onClick={handleClose}>Update Movie</Button>
                     : <Button variant="primary" type="submit" onClick={handleClose}>Add Movie</Button>

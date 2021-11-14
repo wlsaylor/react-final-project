@@ -1,12 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import NavBar from './components/NavBar';
-import { Container } from 'react-bootstrap';
 import { Routes, Route } from 'react-router';
 import Motw from './components/Motw';
 import MovieList from './components/MovieList';
 import ModalForm from './components/ModalForm';
+import NotFound from './components/NotFound';
 import { getMovieList, createMovie, deleteMovie, updateMovie } from './services/Apis';
+import ConfirmModal from './components/ConfirmModal';
 
 const App = () => {
 
@@ -17,7 +18,9 @@ const App = () => {
     const [ movieList, setMovielist ] = useState([]);
     const [ editStatus, setEditStatus ] = useState(false);
     const [ movieToEdit, setMovieToEdit ] = useState(initialFormState);
+    const [ movieToDelete, setMovieToDelete ] = useState([]);
     const [ show, setShow] = useState(false);
+    const [ confirmShow, setConfirmShow ] = useState(false);
 
     // Iniitialize client state from server payload
     useEffect(() => {
@@ -36,10 +39,12 @@ const App = () => {
         await fetchMovies();
     };
 
-    // DELETE target movie from state and server
-    const removeMovie = async (_id) => {
-        await deleteMovie(_id);
-        setMovielist(movieList.filter((movie) => movie._id !== _id));
+    // DELETE movieToDelete from state and server
+    const removeMovie = async () => {
+        await deleteMovie(movieToDelete[0]._id);
+        handleConfirmClose();
+        setMovielist(movieList.filter((movie) => movie._id !== movieToDelete[0]._id));
+        setMovieToDelete([]);
     };
         
     // UPDATE movie and refresh list
@@ -52,6 +57,8 @@ const App = () => {
     // Modal helper functions
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const handleConfirmClose = () => setConfirmShow(false);
+    const handleConfirmShow = () => setConfirmShow(true);
 
     // Display edit movie modal with populated values
     const editMovie = (_id) => {
@@ -66,16 +73,24 @@ const App = () => {
         handleShow();
     };
 
+    // Display confirm delete modal
+    const confirmDelete = (_id) => {
+        setMovieToDelete(movieList.filter((movie) => movie._id === _id));
+        handleConfirmShow();
+    }
+
     return (
-        <Container fluid>
+        <div>
             <NavBar />
             <Routes>
                 <Route path="/" element={<Motw />} />
-                <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={removeMovie}/>} />
+                <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={confirmDelete}/>} />
                 <Route path="/motw" element={<Motw />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
             <ModalForm show={show} editStatus={editStatus} movieToEdit={movieToEdit} handleClose={handleClose} onUpdate={onUpdate} onAdd={addMovie} />
-        </Container>
+            <ConfirmModal confirmShow = {confirmShow} onDelete={removeMovie} handleConfirmClose={handleConfirmClose} movieToDelete={movieToDelete}/>
+        </div>
     )
 }
 

@@ -1,5 +1,4 @@
-
-const CRUDCRUD = "ecd299cfe39f458e995be1628b2d6955";
+const CRUDCRUD = "ef78e9c476d34be38e2ef2a16e10e86e";
 const MOVIE_ENDPOINT = `https://crudcrud.com/api/${CRUDCRUD}/movies`;
 
 const getFetchOptions = (method, data) => ({ 
