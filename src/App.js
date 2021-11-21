@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import NavBar from './components/NavBar';
 import { Routes, Route } from 'react-router';
-import Motw from './components/Motw';
+import MotwContainer from './components/MotwContainer';
 import MovieList from './components/MovieList';
 import ModalForm from './components/ModalForm';
 import NotFound from './components/NotFound';
@@ -12,7 +12,7 @@ import ConfirmModal from './components/ConfirmModal';
 const App = () => {
 
     // Give Edit Form initial state to keep it controlled
-    const initialFormState = {_id: null, title: '', link:'', description:'', rating:''};
+    const initialFormState = {_id: null, title: '', poster:'', description:'', rating:''};
 
     // Add state
     const [ movieList, setMovielist ] = useState([]);
@@ -21,6 +21,7 @@ const App = () => {
     const [ movieToDelete, setMovieToDelete ] = useState([]);
     const [ show, setShow] = useState(false);
     const [ confirmShow, setConfirmShow ] = useState(false);
+    const [ motw, setMotw ] = useState([]);
 
     // Iniitialize client state from server payload
     useEffect(() => {
@@ -79,13 +80,19 @@ const App = () => {
         handleConfirmShow();
     }
 
+    const updateMotw = (_id) => {
+        console.log(_id);
+        setMotw(movieList.filter((movie) => movie._id === _id));
+        console.log(motw);
+    }
+
     return (
         <div>
             <NavBar />
             <Routes>
-                <Route path="/" element={<Motw />} />
+                <Route path="/" element={<MotwContainer />} />
                 <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={confirmDelete}/>} />
-                <Route path="/motw" element={<Motw />} />
+                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw = {updateMotw} motw={motw}/>} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <ModalForm show={show} editStatus={editStatus} movieToEdit={movieToEdit} handleClose={handleClose} onUpdate={onUpdate} onAdd={addMovie} />

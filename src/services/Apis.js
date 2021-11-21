@@ -72,8 +72,9 @@ export const deleteMovie = async (_id) => {
 }
 
 /** 
- * GETS movie title from OMDB API
- * @returns object
+ * GETS movie from OMDB API
+ * @param {string} movieTitle Movie Title
+ * @returns resp
  */
  export const getMovieTitle = async (movieTitle) => {
     try {

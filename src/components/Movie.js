@@ -10,10 +10,14 @@ const Movie = ({movie, onDelete, onEdit}) => {
             </Accordion.Header>
             <AccordionBody>
                 <div className="d-flex justify-content-between align-items-start">
-                    <div className="p-1">
-                        <p>{movie.description}</p>
-                        <p><a href={movie.link} target="_blank" rel="noreferrer noopener">{movie.link}</a></p>
-                        <p>{movie.rating}</p>
+                    <div className="p-1 row">
+                        <div className="col-lg-3 m-1">
+                            <img src={movie.poster} alt="Movie Poster" width="200px" />
+                        </div>
+                        <div className="col-lg-5 m-1">
+                            <p>{movie.description}</p>
+                            <p>{movie.rating}</p>
+                        </div>
                     </div>
                     <ButtonGroup className="p-1">
                         <Button variant="danger" className="m-1" type="button" onClick={() => onDelete(movie._id)}>Delete</Button>

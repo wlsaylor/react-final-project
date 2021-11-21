@@ -6,7 +6,7 @@ import { getMovieTitle } from '../services/Apis';
 const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd }) => {
     // Initialize state on form
     const [title, setTitle] = useState('');
-    const [link, setLink] = useState('');
+    const [poster, setPoster] = useState('');
     const [description, setDescription] = useState('');
     const [_id, set_id] = useState('');
 
@@ -22,7 +22,7 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
     // Populates values in form for editing
     const fillForm = (movieToEdit) => {
         setTitle(movieToEdit.title);
-        setLink(movieToEdit.link);
+        setPoster(movieToEdit.poster);
         setDescription(movieToEdit.description);
         set_id(movieToEdit._id);
     };
@@ -32,22 +32,24 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
         e.preventDefault();
 
         if(editStatus) {
-            onUpdate({_id, title, link, description});
+            onUpdate({_id, title, poster, description});
         } else {
-            onAdd({title, link, description});
+            onAdd({title, poster, description});
         }
         blankForm();
     };
 
     const blankForm = () => {
         setTitle('');
-        setLink('');
+        setPoster('');
         setDescription('');
     }
 
-    const  onBlur = async () => {
+    const handleBlur = async () => {
         const omdbMovie = await getMovieTitle(title);
+        console.log(omdbMovie);
         setDescription(omdbMovie.Plot);
+        setPoster(omdbMovie.Poster);
         setTitle(omdbMovie.Title);
     }
 
@@ -64,11 +66,11 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
           <Modal.Body>
                 <Form.Group className="mb-3" id="movieForm.name">
                     <Form.Label>Title</Form.Label>
-                    <Form.Control type="input" value={title} onBlur={onBlur} onChange={(e) => setTitle(e.target.value)} required />
+                    <Form.Control type="input" value={title} onBlur={handleBlur} onChange={(e) => setTitle(e.target.value)} required />
                 </Form.Group>
-                <Form.Group className="mb-3" id="movieForm.link">
-                    <Form.Label>Link</Form.Label>
-                    <Form.Control type="input" value={link} onChange={(e) => setLink(e.target.value)} />
+                <Form.Group className="mb-3" id="movieForm.poster">
+                    <Form.Label>Poster</Form.Label>
+                    <Form.Control type="input" value={poster} onChange={(e) => setPoster(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" id="movieForm.description">
                     <Form.Label>Description</Form.Label>
