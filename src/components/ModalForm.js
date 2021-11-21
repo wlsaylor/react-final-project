@@ -1,8 +1,9 @@
 import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { getMovieTitle } from '../services/Apis';
 
-const ModalForm = ({show, editStatus, movieToEdit, handleClose, onUpdate, onAdd}) => {
+const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd }) => {
     // Initialize state on form
     const [title, setTitle] = useState('');
     const [link, setLink] = useState('');
@@ -44,6 +45,12 @@ const ModalForm = ({show, editStatus, movieToEdit, handleClose, onUpdate, onAdd}
         setDescription('');
     }
 
+    const  onBlur = async () => {
+        const omdbMovie = await getMovieTitle(title);
+        setDescription(omdbMovie.Plot);
+        setTitle(omdbMovie.Title);
+    }
+
     return (
         <>
         <Modal show={show} onHide={handleClose}>
@@ -57,11 +64,11 @@ const ModalForm = ({show, editStatus, movieToEdit, handleClose, onUpdate, onAdd}
           <Modal.Body>
                 <Form.Group className="mb-3" id="movieForm.name">
                     <Form.Label>Title</Form.Label>
-                    <Form.Control type="input" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    <Form.Control type="input" value={title} onBlur={onBlur} onChange={(e) => setTitle(e.target.value)} required />
                 </Form.Group>
                 <Form.Group className="mb-3" id="movieForm.link">
                     <Form.Label>Link</Form.Label>
-                    <Form.Control type="input" value={link} onChange={(e) => setLink(e.target.value)} required/>
+                    <Form.Control type="input" value={link} onChange={(e) => setLink(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" id="movieForm.description">
                     <Form.Label>Description</Form.Label>

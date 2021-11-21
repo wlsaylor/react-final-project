@@ -1,4 +1,4 @@
-const CRUDCRUD = "ef78e9c476d34be38e2ef2a16e10e86e";
+const CRUDCRUD = "67685598cfbe4644af40989be9c83056";
 const MOVIE_ENDPOINT = `https://crudcrud.com/api/${CRUDCRUD}/movies`;
 
 const getFetchOptions = (method, data) => ({ 
@@ -67,6 +67,22 @@ export const deleteMovie = async (_id) => {
     }
     catch(e) {
         console.log('There was an error deleting the movie', e);
+        return null;
+    }
+}
+
+/** 
+ * GETS movie title from OMDB API
+ * @returns object
+ */
+ export const getMovieTitle = async (movieTitle) => {
+    try {
+        const OMDB_ENDPOINT = `https://www.omdbapi.com/?apikey=323f63a2&&t=${movieTitle}`
+        const resp = await fetch(OMDB_ENDPOINT);
+        return await resp.json();
+    } 
+    catch(e) {
+        console.log('There was an error retrieving the movie.', e);
         return null;
     }
 }
