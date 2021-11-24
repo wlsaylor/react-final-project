@@ -21,7 +21,6 @@ const App = () => {
     const [ movieToDelete, setMovieToDelete ] = useState([]);
     const [ show, setShow] = useState(false);
     const [ confirmShow, setConfirmShow ] = useState(false);
-    const [ motw, setMotw ] = useState([]);
 
     // Iniitialize client state from server payload
     useEffect(() => {
@@ -80,19 +79,26 @@ const App = () => {
         handleConfirmShow();
     }
 
-    const updateMotw = (_id) => {
-        console.log(_id);
-        setMotw(movieList.filter((movie) => movie._id === _id));
-        console.log(motw);
+    const updateMotw = async (_id) => {
+        const oldMotw = (movieList.filter((movie) => movie.isMotw === true))[0];
+        if (oldMotw) {
+            oldMotw.isMotw = false;
+            await onUpdate(oldMotw);
+        }
+
+        const newMotw = (movieList.filter((movie) => movie._id === _id))[0];
+        newMotw.isMotw = true;
+        await onUpdate(newMotw);
+        console.log(movieList);
     }
 
     return (
         <div>
             <NavBar />
             <Routes>
-                <Route path="/" element={<MotwContainer />} />
+                <Route path="/" element={<MotwContainer movieList={movieList} updateMotw = {updateMotw} />} />
                 <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={confirmDelete}/>} />
-                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw = {updateMotw} motw={motw}/>} />
+                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw ={updateMotw} />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <ModalForm show={show} editStatus={editStatus} movieToEdit={movieToEdit} handleClose={handleClose} onUpdate={onUpdate} onAdd={addMovie} />
