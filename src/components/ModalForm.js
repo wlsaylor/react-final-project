@@ -10,6 +10,8 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
     const [description, setDescription] = useState('');
     const [_id, set_id] = useState('');
 
+    const comments = [];
+
     // Update form values when the movieToEdit state is updated
     useEffect(
         () => {
@@ -34,7 +36,7 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
         if(editStatus) {
             onUpdate({_id, title, poster, description});
         } else {
-            onAdd({title, poster, description});
+            onAdd({title, poster, description, comments});
         }
         blankForm();
     };

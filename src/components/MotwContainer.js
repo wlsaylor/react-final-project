@@ -1,12 +1,37 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import CommentList from './CommentList';
+import CommentForm from './CommentForm';
 import Motw from './Motw';
+import { updateMovie } from '../services/Apis';
 
 const MotwContainer = ({movieList, updateMotw }) => {
-    console.log(movieList);
     const motw = movieList ? movieList.filter(movie => movie.isMotw)[0] : {};
+    const initialCommentFormState = {_id: null, content: '', user: ''};
+
+    const [ comments, setComments ] = useState([]);
+    const [ commentEditStatus, setCommentEditStatus ] = useState(false);
+    const [ commentToEdit, setCommentToEdit ] = useState(initialCommentFormState);
+
+    console.log(movieList);
     console.log(motw);
+
+    const editComment = (comment) => {
+        console.log(comment);
+    };
+
+    const deleteComment = (comment) => {
+        console.log(comment);
+    };
+
+    const addComment = async (comment) => {
+        comment.id = Math.random();
+        setComments([...comments, comment]);
+        motw.comments = comments;
+        console.log(motw);
+        const { _id, ...movieWithoutId} = motw;
+        await updateMovie(_id, movieWithoutId);
+    };
 
     return (
         <>
@@ -26,7 +51,8 @@ const MotwContainer = ({movieList, updateMotw }) => {
             </div>
             {motw ? <Motw motw={motw}/> : <p>No Movie Selected.</p>}
         </div>
-        <CommentList />
+        <CommentList comments={motw ? motw.comments : []} onEdit={editComment} onDelete= {deleteComment}/>
+        <CommentForm onAdd={addComment} editStatus={commentEditStatus} commentToEdit={commentToEdit}/>
         </>
     )
 };

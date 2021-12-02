@@ -79,6 +79,7 @@ const App = () => {
         handleConfirmShow();
     }
 
+    // Update isMotw property on outgoing and incoming Motw movie objects
     const updateMotw = async (_id) => {
         const oldMotw = (movieList.filter((movie) => movie.isMotw === true))[0];
         if (oldMotw) {
@@ -108,3 +109,16 @@ const App = () => {
 }
 
 export default App
+
+/** TODOS
+ * Build Comment Section
+ * Add confirm modal for changing Motw
+ * Add watch date for Motw
+ * Incorporate more movie data into Motw and Movie components
+ * Add watch date check to change style on WatchList Accordion
+ * 
+ * Styling
+ *  
+ * Stretch Goal: Add loading spinners
+ * Stretch Goal: Add Settings for different movie data
+ */
