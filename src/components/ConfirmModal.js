@@ -13,6 +13,6 @@ const ConfirmModal = ( {confirmShow, onDelete, handleConfirmClose} ) => {
             </Modal.Footer>
         </Modal>
     )
-}
+};
 
-export default ConfirmModal
+export default ConfirmModal;

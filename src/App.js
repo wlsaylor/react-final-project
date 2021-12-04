@@ -12,10 +12,10 @@ import ConfirmModal from './components/ConfirmModal';
 const App = () => {
 
     // Give Edit Form initial state to keep it controlled
-    const initialFormState = {_id: null, title: '', poster:'', description:'', rating:''};
+    const initialFormState = {_id: null, title: '', poster:'', description:'', rating:'', year: ''};
     const initialCommentFormState = {_id: null, content: '', user: ''};
 
-    // Add state
+    // State for app
     const [ movieList, setMovielist ] = useState([]);
     const [ editStatus, setEditStatus ] = useState(false);
     const [ movieToEdit, setMovieToEdit ] = useState(initialFormState);
@@ -68,7 +68,7 @@ const App = () => {
 
     // Display edit movie modal with populated values
     const editMovie = (_id) => {
-        setMovieToEdit(movieList.filter((movie) => movie._id === _id));
+        setMovieToEdit(movieList.filter(movie => movie._id === _id));
         setEditStatus(true);
         handleShow();
     };
@@ -96,9 +96,9 @@ const App = () => {
         newMotw.isMotw = true;
         setMotw(newMotw);
         await onUpdate(newMotw);
-        console.log(movieList);
     };
 
+    // Loads comment to edit into comment form
     const editComment = (comment) => {
         const movieToEditCommentFrom = motw[0];
         const commentIndexToEdit = movieToEditCommentFrom.comments.findIndex(e => e.id === comment.id);
@@ -106,6 +106,7 @@ const App = () => {
         setCommentEditStatus(true);
     };
 
+    // Handles comment state and API upon comment form submit
     const updateComment = async (comment) => {
         const movieToUpdate = motw[0];
         const commentIndexToUpdate = movieToUpdate.comments.findIndex(e => e.id === comment.id);
@@ -116,6 +117,7 @@ const App = () => {
         setCommentEditStatus(false);
     };
 
+    // Handles commend deletion
     const deleteComment = async (comment) => {
         const movieToDeleteFrom = motw[0];
         const commentIndexToDelete = movieToDeleteFrom.comments.findIndex(e => e.id === comment.id);
@@ -123,6 +125,7 @@ const App = () => {
         await onUpdate(movieToDeleteFrom);
     };
 
+    // Creates a new comment in comment array
     const addComment = async (comment) => {
         comment.id = Math.random();
         const commentedMovie = motw[0];
@@ -134,29 +137,52 @@ const App = () => {
 
     return (
         <div>
-            <NavBar />
-            <Routes>
-                <Route path="/" element={<MotwContainer movieList={movieList} updateMotw = {updateMotw} />} />
-                <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={confirmDelete}/>} />
-                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw ={updateMotw} onAdd={addComment} onEdit={editComment} onDelete={deleteComment} commentToEdit={commentToEdit} commentEditStatus={commentEditStatus} motwComments={motwComments} onUpdate={updateComment}/>} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-            <ModalForm show={show} editStatus={editStatus} movieToEdit={movieToEdit} handleClose={handleClose} onUpdate={onUpdate} onAdd={addMovie} />
-            <ConfirmModal confirmShow = {confirmShow} onDelete={removeMovie} handleConfirmClose={handleConfirmClose} movieToDelete={movieToDelete}/>
+            <NavBar/>
+            <div className="container mb-2 min-vh-100">
+                <Routes>
+                    <Route 
+                        path="/" 
+                        element={<MotwContainer 
+                        movieList={movieList} 
+                        updateMotw = {updateMotw} />} />
+                    <Route 
+                        path="/list" 
+                        element={<MovieList 
+                            movieList={movieList} 
+                            onNew={newMovie} 
+                            onEdit={editMovie} 
+                            onDelete={confirmDelete}/>} />
+                    <Route 
+                        path="/motw" 
+                        element={<MotwContainer 
+                            movieList={movieList} 
+                            updateMotw ={updateMotw} 
+                            onAdd={addComment} 
+                            onEdit={editComment} 
+                            onDelete={deleteComment} 
+                            commentToEdit={commentToEdit} 
+                            commentEditStatus={commentEditStatus} 
+                            motwComments={motwComments} 
+                            onUpdate={updateComment}/>} />
+                    <Route 
+                        path="*" 
+                        element={<NotFound />} />
+                </Routes>
+            </div>
+            <ModalForm 
+                show={show} 
+                editStatus={editStatus} 
+                movieToEdit={movieToEdit} 
+                handleClose={handleClose} 
+                onUpdate={onUpdate} 
+                onAdd={addMovie} />
+            <ConfirmModal 
+                confirmShow = {confirmShow} 
+                onDelete={removeMovie} 
+                handleConfirmClose={handleConfirmClose} 
+                movieToDelete={movieToDelete}/>
         </div>
     )
-}
+};
 
-export default App
-
-/** TODOS
- * Build Comment Section
- * Styling
- *  
- * Stretch Goal: Add loading spinners
- * Stretch Goal: Add Settings for different movie data
- * Add confirm modal for changing Motw
- * Add watch date for Motw
- * Add watch date check to change style on WatchList Accordion
- * Incorporate more movie data into Motw and Movie components
- */
+export default App;

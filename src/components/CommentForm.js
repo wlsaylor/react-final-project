@@ -8,6 +8,7 @@ const CommentForm = ({commentEditStatus, commentToEdit, onAdd, onUpdate}) => {
     const [user, setUser] = useState('');
     const [id, setId] = useState('');
 
+    // Listen for edit status
     useEffect(
         () => {
             if (commentEditStatus) {fillForm(commentToEdit);}
@@ -15,6 +16,7 @@ const CommentForm = ({commentEditStatus, commentToEdit, onAdd, onUpdate}) => {
         [commentEditStatus, commentToEdit]
     );
 
+    // Handle form submission whether new or update
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -33,29 +35,38 @@ const CommentForm = ({commentEditStatus, commentToEdit, onAdd, onUpdate}) => {
         setId(commentToEdit.id);
     };
 
+    // Clears form after submission
     const blankForm = () => {
         setContent('');
         setUser('');
     }
 
     return (
-        <Form onSubmit={onSubmit} className="w-75">
+        <Form onSubmit={onSubmit} >
             <Form.Group className="mb-3" id="comment.user">
                 <Form.Label>User</Form.Label>
-                <Form.Control type="input" value={user} onChange={(e) => setUser(e.target.value)} required />
+                <Form.Control 
+                    type="input" 
+                    value={user} 
+                    onChange={(e) => setUser(e.target.value)} 
+                    required />
             </Form.Group>
             <Form.Group className="mb-3" id="comment.content">
                 <Form.Label>Comment</Form.Label>
-                <Form.Control type="input" value={content} onChange={(e) => setContent(e.target.value)} required />
+                <Form.Control 
+                    as="textarea" 
+                    value={content} 
+                    onChange={(e) => setContent(e.target.value)} 
+                    required />
             </Form.Group>
-            <Form.Group>
-            {commentEditStatus 
+            <Form.Group className="text-end">
+                {commentEditStatus 
                     ? <Button variant="warning" type="submit">Update Comment</Button>
                     : <Button variant="primary" type="submit">Add Comment</Button>
                 }
             </Form.Group>
         </Form>
     )
-}
+};
 
-export default CommentForm
+export default CommentForm;

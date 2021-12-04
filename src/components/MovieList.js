@@ -10,11 +10,19 @@ const MovieList = ({onNew, movieList, onDelete, onEdit}) => {
                 <h1 className="mx-3">Watch List</h1>
                 <Button variant="primary" className="mx-3" type="button" onClick={() => onNew()}>Add New Movie</Button>
             </div>
-            {movieList
-                ? <Accordion>{movieList.sort((a, b) => a.title.localeCompare(b.title))
-                        .map((movie, id) => (<Movie key={id} movie={movie} onDelete={onDelete} onEdit={onEdit} />))}</Accordion> 
-                : <h2>No Movies to Show</h2>
-            }
+            <div className="mx-4 mb-2">
+                {movieList
+                    ? <Accordion>{movieList.sort((a, b) => a.title.localeCompare(b.title))
+                        .map((movie, id) => 
+                        (<Movie 
+                            key={id} 
+                            movie={movie} 
+                            onDelete={onDelete} 
+                            onEdit={onEdit} />))}
+                    </Accordion> 
+                    : <h2>No Movies to Show</h2>
+                }
+            </div>
         </div>
     )
 };

@@ -1,6 +1,8 @@
-const CRUDCRUD = "03c88d44133a46979a4939639b7d5ff3";
+// Crud Crud API Endpoints
+const CRUDCRUD = "68818b93bd244ad2a162f5abb7d86b07";
 const MOVIE_ENDPOINT = `https://crudcrud.com/api/${CRUDCRUD}/movies`;
 
+// Helper function for API requests
 const getFetchOptions = (method, data) => ({ 
     method: method, 
     headers: { "Content-Type": "application/json" },
@@ -20,18 +22,7 @@ export const getMovieList = async () => {
         console.log('There was an error retrieving the movielist', e);
         return null;
     }
-}
-
-export const getMovie = async (movie) => {
-    try {
-        const resp = await fetch(`${MOVIE_ENDPOINT}/${movie._id}`);
-        return await resp.json();
-    } 
-    catch(e) {
-        console.log('There was an error retrieving the movielist', e);
-        return null;
-    }
-}
+};
 
 /**
  * POSTS movie to server
@@ -47,7 +38,7 @@ export const createMovie = async (movie) => {
         console.log('There was an error adding the movie', e);
         return null;
     }
-}
+};
 
 /**
  * UPDATES movie in server
@@ -64,7 +55,7 @@ export const updateMovie = async (_id, movieWithoutId) => {
         console.log('There was an error updating the movie', e);
         return null;
     }
-}
+};
 
 /**
  * DELETES movie from server
@@ -80,7 +71,7 @@ export const deleteMovie = async (_id) => {
         console.log('There was an error deleting the movie', e);
         return null;
     }
-}
+};
 
 /** 
  * GETS movie from OMDB API
@@ -97,4 +88,4 @@ export const deleteMovie = async (_id) => {
         console.log('There was an error retrieving the movie.', e);
         return null;
     }
-}
+};
