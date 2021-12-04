@@ -3,7 +3,7 @@ import { Card, ButtonGroup, Button } from 'react-bootstrap';
 
 const Comment = ({comment, onDelete, onEdit}) => {
     return (
-        <Card>
+        <Card className="border border-primary m-2">
             <Card.Header>
                 <h6>{comment.user}</h6>
             </Card.Header>
