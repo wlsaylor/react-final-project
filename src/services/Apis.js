@@ -1,4 +1,4 @@
-const CRUDCRUD = "2b62b318a99b4c029c517163d3b6ea5c";
+const CRUDCRUD = "03c88d44133a46979a4939639b7d5ff3";
 const MOVIE_ENDPOINT = `https://crudcrud.com/api/${CRUDCRUD}/movies`;
 
 const getFetchOptions = (method, data) => ({ 
@@ -14,6 +14,17 @@ const getFetchOptions = (method, data) => ({
 export const getMovieList = async () => {
     try {
         const resp = await fetch(MOVIE_ENDPOINT);
+        return await resp.json();
+    } 
+    catch(e) {
+        console.log('There was an error retrieving the movielist', e);
+        return null;
+    }
+}
+
+export const getMovie = async (movie) => {
+    try {
+        const resp = await fetch(`${MOVIE_ENDPOINT}/${movie._id}`);
         return await resp.json();
     } 
     catch(e) {

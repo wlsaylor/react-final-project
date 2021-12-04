@@ -13,6 +13,7 @@ const App = () => {
 
     // Give Edit Form initial state to keep it controlled
     const initialFormState = {_id: null, title: '', poster:'', description:'', rating:''};
+    const initialCommentFormState = {_id: null, content: '', user: ''};
 
     // Add state
     const [ movieList, setMovielist ] = useState([]);
@@ -21,6 +22,10 @@ const App = () => {
     const [ movieToDelete, setMovieToDelete ] = useState([]);
     const [ show, setShow] = useState(false);
     const [ confirmShow, setConfirmShow ] = useState(false);
+    const [ motw, setMotw ] = useState([]);
+    const [ motwComments, setMotwComments ] = useState([]);
+    const [ commentEditStatus, setCommentEditStatus ] = useState(false);
+    const [ commentToEdit, setCommentToEdit ] = useState(initialCommentFormState);
 
     // Iniitialize client state from server payload
     useEffect(() => {
@@ -29,8 +34,9 @@ const App = () => {
 
     // GET movies from server
     const fetchMovies = async () => {
-        const moviesFromServer = await getMovieList();
+        const moviesFromServer = await getMovieList() ?? [];
         setMovielist(moviesFromServer);
+        setMotw(moviesFromServer.filter((movie) => movie.isMotw === true));
     };
 
     // ADD movie to state and server
@@ -86,12 +92,45 @@ const App = () => {
             oldMotw.isMotw = false;
             await onUpdate(oldMotw);
         }
-
         const newMotw = (movieList.filter((movie) => movie._id === _id))[0];
         newMotw.isMotw = true;
+        setMotw(newMotw);
         await onUpdate(newMotw);
         console.log(movieList);
-    }
+    };
+
+    const editComment = (comment) => {
+        const movieToEditCommentFrom = motw[0];
+        const commentIndexToEdit = movieToEditCommentFrom.comments.findIndex(e => e.id === comment.id);
+        setCommentToEdit(movieToEditCommentFrom.comments[commentIndexToEdit]);
+        setCommentEditStatus(true);
+    };
+
+    const updateComment = async (comment) => {
+        const movieToUpdate = motw[0];
+        const commentIndexToUpdate = movieToUpdate.comments.findIndex(e => e.id === comment.id);
+        movieToUpdate.comments.splice(commentIndexToUpdate, 1, comment);
+        const { _id, ...movieWithoutId} = movieToUpdate;
+        await updateMovie(_id, movieWithoutId);
+        await fetchMovies();
+        setCommentEditStatus(false);
+    };
+
+    const deleteComment = async (comment) => {
+        const movieToDeleteFrom = motw[0];
+        const commentIndexToDelete = movieToDeleteFrom.comments.findIndex(e => e.id === comment.id);
+        movieToDeleteFrom.comments.splice(commentIndexToDelete, 1);
+        await onUpdate(movieToDeleteFrom);
+    };
+
+    const addComment = async (comment) => {
+        comment.id = Math.random();
+        const commentedMovie = motw[0];
+        commentedMovie.comments.push(comment);
+        const { _id, ...movieWithoutId} = commentedMovie;
+        await updateMovie(_id, movieWithoutId);
+        setMotwComments(commentedMovie.comments);
+    };
 
     return (
         <div>
@@ -99,7 +138,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<MotwContainer movieList={movieList} updateMotw = {updateMotw} />} />
                 <Route path="/list" element={<MovieList movieList={movieList} onNew={newMovie} onEdit={editMovie} onDelete={confirmDelete}/>} />
-                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw ={updateMotw} />} />
+                <Route path="/motw" element={<MotwContainer movieList={movieList} updateMotw ={updateMotw} onAdd={addComment} onEdit={editComment} onDelete={deleteComment} commentToEdit={commentToEdit} commentEditStatus={commentEditStatus} motwComments={motwComments} onUpdate={updateComment}/>} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <ModalForm show={show} editStatus={editStatus} movieToEdit={movieToEdit} handleClose={handleClose} onUpdate={onUpdate} onAdd={addMovie} />
@@ -112,13 +151,12 @@ export default App
 
 /** TODOS
  * Build Comment Section
- * Add confirm modal for changing Motw
- * Add watch date for Motw
- * Incorporate more movie data into Motw and Movie components
- * Add watch date check to change style on WatchList Accordion
- * 
  * Styling
  *  
  * Stretch Goal: Add loading spinners
  * Stretch Goal: Add Settings for different movie data
+ * Add confirm modal for changing Motw
+ * Add watch date for Motw
+ * Add watch date check to change style on WatchList Accordion
+ * Incorporate more movie data into Motw and Movie components
  */

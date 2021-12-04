@@ -1,37 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 import Motw from './Motw';
-import { updateMovie } from '../services/Apis';
 
-const MotwContainer = ({movieList, updateMotw }) => {
-    const motw = movieList ? movieList.filter(movie => movie.isMotw)[0] : {};
-    const initialCommentFormState = {_id: null, content: '', user: ''};
+const MotwContainer = ({movieList, updateMotw, onAdd, onEdit, onDelete, commentEditStatus, commentToEdit, onUpdate }) => {
 
-    const [ comments, setComments ] = useState([]);
-    const [ commentEditStatus, setCommentEditStatus ] = useState(false);
-    const [ commentToEdit, setCommentToEdit ] = useState(initialCommentFormState);
-
-    console.log(movieList);
-    console.log(motw);
-
-    const editComment = (comment) => {
-        console.log(comment);
-    };
-
-    const deleteComment = (comment) => {
-        console.log(comment);
-    };
-
-    const addComment = async (comment) => {
-        comment.id = Math.random();
-        setComments([...comments, comment]);
-        motw.comments = comments;
-        console.log(motw);
-        const { _id, ...movieWithoutId} = motw;
-        await updateMovie(_id, movieWithoutId);
-    };
+    let motw = movieList ? movieList.filter(movie => movie.isMotw)[0] : {};
+    let motwComments = motw ? motw.comments : [] ;
 
     return (
         <>
@@ -49,10 +25,14 @@ const MotwContainer = ({movieList, updateMotw }) => {
                     }
                 </DropdownButton>
             </div>
-            {motw ? <Motw motw={motw}/> : <p>No Movie Selected.</p>}
+            {motw
+            ? <div>
+                <Motw motw={motw}/> 
+                <CommentList motwComments={motwComments} onEdit={onEdit} onDelete= {onDelete}/>
+                <CommentForm onAdd={onAdd} commentEditStatus={commentEditStatus} commentToEdit={commentToEdit} onUpdate={onUpdate}/>
+            </div>
+            : <p>No Movie Selected.</p>}
         </div>
-        <CommentList comments={motw ? motw.comments : []} onEdit={editComment} onDelete= {deleteComment}/>
-        <CommentForm onAdd={addComment} editStatus={commentEditStatus} commentToEdit={commentToEdit}/>
         </>
     )
 };

@@ -15,7 +15,7 @@ const ModalForm = ({ show, editStatus, movieToEdit, handleClose, onUpdate, onAdd
     // Update form values when the movieToEdit state is updated
     useEffect(
         () => {
-            if (show && editStatus) {fillForm(movieToEdit[0]);}
+            if (show && editStatus) {fillForm(movieToEdit);}
             if (show && !editStatus) {blankForm();}
         },
         [movieToEdit, show, editStatus]

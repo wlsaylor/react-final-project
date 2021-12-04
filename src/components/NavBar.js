@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, Button } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const NavBar = () => {
@@ -11,9 +11,6 @@ const NavBar = () => {
 					<Nav className="me-auto">
 						<Link className="nav-link" to="/motw">Movie of the Week</Link>
 						<Link className="nav-link" to="/list">Movie List</Link>
-					</Nav>
-					<Nav>
-						<Button variant="secondary">Sign In</Button>
 					</Nav>
 				</Navbar.Collapse>
 		</Navbar>
